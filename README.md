@@ -3,6 +3,7 @@
 **Asignatura:** Introducción a la Programación Científica  
 
 **Universidad Internacional de La Rioja (UNIR)**  
+
 **Integrantes del grupo:** 
 
 - Andrea Moriñigo Velaz
