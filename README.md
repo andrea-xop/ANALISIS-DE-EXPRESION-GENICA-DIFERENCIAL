@@ -57,6 +57,8 @@ Consiste en:
 **Interpretación y visualización**
 
 
+
+
 **Resultados esperados**
    - Identificación de genes y rutas neuronales alteradas por la exposición a dibromoacetonitrilo 
    - Evidencia de disrrupción de vías sinápticas en el grupo expuesto
