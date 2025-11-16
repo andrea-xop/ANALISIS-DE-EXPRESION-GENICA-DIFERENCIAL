@@ -6,6 +6,8 @@ BiocManager::install("GEOquery", ask = FALSE, type = "binary")
 
 library(GEOquery)
 
+setwd("ANALISIS-DE-EXPRESION-GENICA-DIFERENCIAL") # Se introduce el directorio en el que se va a trabajar
+
 gse <- getGEO("GSE306907", GSEMatrix = TRUE)
 expr <- exprs(gse[[1]])
 meta <- pData(gse[[1]])
@@ -41,3 +43,4 @@ for(url in urls){
   file.remove(gz_file)
 
 }
+
