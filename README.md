@@ -155,43 +155,35 @@ done
    4. Transformación logarítmica: "DESeq2"
 
 ```
-###############################################################
-# 04_differential_analysis.R
-# Pipeline para análisis diferencial de GSE306907
-###############################################################
-
+#04_differential_analysis.R
+#Pipeline para análisis diferencial de GSE306907
 library(readr)
 library(dplyr)
 library(DESeq2)
 library(tximport)
 
-###############################################################
-# 1. CREAR / IMPORTAR tx2gene
-###############################################################
+#1. CREAR / IMPORTAR tx2gene
+#Si ya tenéis tx2gene generado, cargarlo:
+#tx2gene <- read_csv("data/raw/tx2gene.csv")
 
-# Si ya tenéis tx2gene generado, cargarlo:
-# tx2gene <- read_csv("data/raw/tx2gene.csv")
+#Si necesitáis generarlo desde GTF:
+#(Dejar como comentario ilustrativo para los usuarios)
 
-# Si necesitáis generarlo desde GTF:
-# (Dejar como comentario ilustrativo para los usuarios)
-
-# library(GenomicFeatures)
-# txdb <- makeTxDbFromGFF("data/raw/annotation.gtf")
-# k <- keys(txdb, keytype = "TXNAME")
-# tx2gene <- select(txdb, keys = k,
-#                   columns = c("TXNAME", "GENEID"),
-#                   keytype = "TXNAME")
-# write_csv(tx2gene, "data/raw/tx2gene.csv")
+#library(GenomicFeatures)
+#txdb <- makeTxDbFromGFF("data/raw/annotation.gtf")
+#k <- keys(txdb, keytype = "TXNAME")
+#tx2gene <- select(txdb, keys = k,
+#columns = c("TXNAME", "GENEID"),
+#keytype = "TXNAME")
+#write_csv(tx2gene, "data/raw/tx2gene.csv")
 
 tx2gene <- read_csv("data/raw/tx2gene.csv")
 
-###############################################################
-# 2. IMPORTAR CUANTIFICACIÓN DE SALMON
-###############################################################
+#2. IMPORTAR CUANTIFICACIÓN DE SALMON
 
 samples <- read_csv("data/raw/samples_table.csv")
-# samples_table.csv debe tener:
-# sample, condition, path_to_quant
+#samples_table.csv debe tener:
+#sample, condition, path_to_quant
 
 files <- file.path(samples$path_to_quant, "quant.sf")
 names(files) <- samples$sample
@@ -201,13 +193,11 @@ txi <- tximport(files,
                 tx2gene = tx2gene,
                 countsFromAbundance = "lengthScaledTPM")
 
-# Guardar matriz de conteos
+#Guardar matriz de conteos
 counts <- as.data.frame(txi$counts)
 write_csv(counts, "data/processed/gene_counts_matrix.csv")
 
-###############################################################
-# 3. REVISAR LOS GENES MÁS EXPRESADOS
-###############################################################
+#3. REVISAR LOS GENES MÁS EXPRESADOS
 
 message("Most expressed genes:")
 top_genes <- counts %>%
@@ -221,39 +211,35 @@ print(top_genes %>% select(gene, mean_expression))
 
 write_csv(top_genes, "results/tables/top_expressed_genes.csv")
 
-###############################################################
-# 4. FILTRADO DE GENES DE BAJA EXPRESIÓN (DESeq2)
-###############################################################
+#4. FILTRADO DE GENES DE BAJA EXPRESIÓN (DESeq2)
 
 meta <- read_csv("data/raw/metadata_for_DE.csv")
-# metadata_for_DE.csv debe tener:
-# sample, condition
+#metadata_for_DE.csv debe tener:
+#sample, condition
 
-# Asegurar que el orden coincide:
+#Asegurar que el orden coincide:
 all(colnames(counts) == meta$sample)
 
 dds <- DESeqDataSetFromMatrix(countData = counts,
                               colData = meta,
                               design = ~ condition)
 
-# Filtrar genes con muy pocos conteos:
-# Mantener genes con 10 o más conteos totales
+#Filtrar genes con muy pocos conteos:
+#Mantener genes con 10 o más conteos totales
 keep <- rowSums(counts(dds)) >= 10
 dds <- dds[keep, ]
 
 message(paste("Genes tras filtrado:", nrow(dds)))
 
-###############################################################
-# 5. TRANSFORMACIÓN LOGARÍTMICA (normalización)
-###############################################################
+#5. TRANSFORMACIÓN LOGARÍTMICA (normalización)
 
-# VST (más rápido)
+#VST (más rápido)
 vsd <- vst(dds, blind = FALSE)
 saveRDS(vsd, "data/processed/vst_normalized.rds")
 
-# rlog (opcional, más lento)
-# rld <- rlog(dds, blind = FALSE)
-# saveRDS(rld, "data/processed/rlog_normalized.rds")
+#rlog (opcional, más lento)
+#rld <- rlog(dds, blind = FALSE)
+#saveRDS(rld, "data/processed/rlog_normalized.rds")
 
 message("Transformación logarítmica completada. Archivos guardados.")
 ```
