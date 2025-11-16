@@ -56,15 +56,6 @@ Esta sección explica **cómo ejecutar el proyecto paso a paso en tu propio orde
 Incluye el orden de ejecución y las acciones prácticas que cualquier usuario debe realizar para reproducir el análisis completo.
 Piensa en esto como un manual de ejecución. 
 
-**Requisitos del sistema** (TODOS LOS PAQUETES QUE USO PARA COMENTAR Y QUITAR DESPUÉS DE AQUI!!!)
-Para reproducir el análisis se recomienda un entorno Linux o WSL con las siguientes herramientas:
-   - **R ≥ 4.2.0** (para el análisis)
-   - **SRA Toolkit** (para descargar archivos FASTQ)
-   - **FASTQC** (para el análisis de control de calidad)
-   - **fastp** (para la limpieza de secuencias)
-   - **Salmon ≥ 1.10.0** (para el análisis de la expresión génica)
-   - **Paquetes de R: "tidyverse", "readr", "ggplot2", "pheatmap", "BioCManager", "DESeq2", "GEOquery", "tixmport"** (para la comparación y visualización de los resultados)
-
 ### 1º Descarga de datos desde GEO
    1. Accede a la página Gene Expression Omnibus (GEO): https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE306907
    2. En el apartado "Selector de ejecución SRA" identificar qué runs SRR corresponden a cada condición
@@ -243,7 +234,7 @@ message("Transformación logarítmica completada. Archivos guardados.")
  
  ---
 ## *Requisitos técnicos y del entorno*
-Para la recreación de este proyecto será necesario tener en cuenta la versión de R utilizada, así como los paquetes que necesitarán ser instalados, estando enlistado a continuación:
+Para la recreación de este proyecto será necesario tener en cuenta que se utilizó un entorno de Linux o WSL, así como las siguientes herramientas:
 
 ### 1º Versión de R necesaria:
 Debe ser una versión de R igual o superior a 4.3
@@ -260,6 +251,7 @@ Debe ser una versión de R igual o superior a 4.3
 “BiocManager”
 ”DESeq2”
 “GEOquery”
+"tixmport"
 ```
 
 ### 3º Elaboración del entorno:
@@ -269,6 +261,13 @@ install.packages(c("tidyverse", "readr", "janitor", "ggplot2", "pheatmap"))
 if (!requireNamespace("BiocManager", quietly=TRUE)) 
 install.packages("BiocManager") BiocManager::install(c("DESeq2", "GEOquery"))
 ```
+
+### 4º Otras herramientas utilizadas:
+
+   - **SRA Toolkit** (para descargar archivos FASTQ)
+   - **FASTQC** (para el análisis de control de calidad)
+   - **fastp** (para la limpieza de secuencias)
+   - **Salmon ≥ 1.10.0** (para el análisis de la expresión génica)
 
  ---
 ## *Visión conceptual del flujo de análisis*
