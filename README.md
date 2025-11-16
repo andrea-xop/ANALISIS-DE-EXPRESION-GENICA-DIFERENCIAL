@@ -69,6 +69,7 @@ Para reproducir el análisis se recomienda un entorno Linux o WSL con las siguie
    1. Accede a la página Gene Expression Omnibus (GEO): https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE306907
    2. En el apartado "Selector de ejecución SRA" identificar qué runs SRR corresponden a cada condición
    3. Mediante SRA Toolkit descarga los archivos FASTQ:
+
       ´´´bash
       #Crear carpeta para almacenar datos en bruto
       mkdir -p data/raw
@@ -90,12 +91,14 @@ Para reproducir el análisis se recomienda un entorno Linux o WSL con las siguie
 ### Preprocesamiento
 Consiste en:
    - **Análisis de calidad de las muestras: interfaz gráfica FASTQC**
-      ´´´bash
+
+     ´´´bash
      mkdir -p results/fastqc
      fastqc -o results/fastqc data/raw/fastq/*.fastq
 
    - **Limpieza de datos: fastp**
-      ´´´bash
+
+     ´´´bash
      mkdir -p data/processed/fastq_clean
 for fq in data/raw/fastq/*_1.fastq; do
   base=$(basename $fq _1.fastq)
@@ -107,10 +110,12 @@ done
 
 ### Cuantificación de la expresión génica
    1. Crear índice de transcriptoma de zebrafish
+
       ´´´bash
       salmon index -t transcripts.fa -i index_salmon --type quasi -k 31
 
    3. Cuantificación de la expresión: Salmon
+
       ´´´bash
       mkdir -p results/salmon
 for sample in $(ls data/processed/fastq_clean/*_1.clean.fastq | sed 's/_1.clean.fastq//' ); do
@@ -121,6 +126,7 @@ for sample in $(ls data/processed/fastq_clean/*_1.clean.fastq | sed 's/_1.clean.
 done
 
       4. Importar cuantificaciones y preparar matriz de conteo (R)
+      
       ´´´r
       #src/03_import_tximport.R (fragmento)
       library(tximport)
